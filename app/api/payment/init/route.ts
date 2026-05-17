@@ -2,14 +2,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { initiatePayment } from '@/lib/sslcommerz'
 import { createOrder } from '@/lib/supabase'
-import { nanoid } from 'nanoid'
+import { randomBytes } from 'crypto'
 
 export async function POST(req: NextRequest) {
   try {
     const { items, totalAmount, shippingAddress } = await req.json()
 
     // Create order in DB first
-    const orderId = `SM-${nanoid(8).toUpperCase()}`
+    const orderId = `SM-${randomBytes(4).toString('hex').toUpperCase()}`
 
     const order = await createOrder({
       id: orderId,
