@@ -1,4 +1,6 @@
 // app/(admin)/admin/page.tsx
+export const dynamic = 'force-dynamic'
+
 import { getAllOrders, getProducts } from '@/lib/supabase'
 import AdminSidebar from '@/components/admin/AdminSidebar'
 import StatsCard from '@/components/admin/StatsCard'
@@ -7,10 +9,14 @@ import OrderTable from '@/components/admin/OrderTable'
 import { Package, ShoppingBag, DollarSign, Users } from 'lucide-react'
 
 export default async function AdminDashboard() {
-  const [orders, products] = await Promise.all([
-    getAllOrders(),
-    getProducts(),
-  ])
+  let orders: any[] = []
+  let products: any[] = []
+
+  try {
+    ;[orders, products] = await Promise.all([getAllOrders(), getProducts()])
+  } catch (e) {
+    // DB not configured yet — show empty state
+  }
 
   const totalRevenue = orders?.reduce((sum, o) => sum + (o.total_amount || 0), 0) || 0
   const paidOrders = orders?.filter(o => o.payment_status === 'paid') || []

@@ -1,4 +1,6 @@
 // app/(shop)/page.tsx
+export const dynamic = 'force-dynamic'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { getProducts } from '@/lib/supabase'
@@ -7,8 +9,12 @@ import Navbar from '@/components/shop/Navbar'
 import Footer from '@/components/shop/Footer'
 
 export default async function HomePage() {
-  const products = await getProducts({ limit: 6 })
-  const featuredProduct = products?.[0]
+  let products: any[] = []
+  try {
+    products = await getProducts({ limit: 6 }) || []
+  } catch (e) {
+    // DB not configured yet — show empty state
+  }
 
   return (
     <>
@@ -48,17 +54,13 @@ export default async function HomePage() {
           {/* Center — Hero Bag */}
           <div className="flex justify-center items-center relative">
             <div className="relative">
-              {/* Glow */}
               <div className="absolute inset-0 rounded-full bg-brand-green/10 blur-3xl scale-110" />
-
-              {/* Badges */}
               <div className="absolute left-0 top-[42%] -translate-x-1/2 rotate-[-3deg] bg-brand-gold text-gray-900 font-display font-bold text-xl px-5 py-3 rounded-lg border-2 border-amber-600 shadow-[3px_4px_0_#9a6508] whitespace-nowrap z-10 animate-pop">
                 CRISPY &amp;
               </div>
               <div className="absolute left-0 top-[57%] -translate-x-1/3 rotate-[-2deg] bg-brand-red text-white font-display font-bold text-xl px-5 py-3 rounded-lg border-2 border-red-800 shadow-[3px_4px_0_#6e1f17] whitespace-nowrap z-10 animate-pop [animation-delay:200ms]">
                 TEASTY
               </div>
-
               <Image
                 src="/images/hero.png"
                 alt="Too Yummi Veggie Stix"
@@ -105,11 +107,15 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products?.map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            {products.length > 0 ? (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map(product => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-white/50 text-center py-12 font-bold">Products loading...</p>
+            )}
           </div>
         </section>
 

@@ -1,4 +1,6 @@
 // app/(admin)/admin/products/page.tsx
+export const dynamic = 'force-dynamic'
+
 import { getProducts } from '@/lib/supabase'
 import AdminSidebar from '@/components/admin/AdminSidebar'
 import Link from 'next/link'
@@ -6,7 +8,12 @@ import Image from 'next/image'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 
 export default async function AdminProductsPage() {
-  const products = await getProducts()
+  let products: any[] = []
+  try {
+    products = await getProducts() || []
+  } catch (e) {
+    // DB not configured yet
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -93,6 +100,13 @@ export default async function AdminProductsPage() {
                   </td>
                 </tr>
               ))}
+              {products.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="p-12 text-center text-gray-400 font-bold">
+                    No products yet. Add your first product!
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

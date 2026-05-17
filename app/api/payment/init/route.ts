@@ -1,14 +1,16 @@
 // app/api/payment/init/route.ts
+export const dynamic = 'force-dynamic'
+
 import { NextRequest, NextResponse } from 'next/server'
-import { initiatePayment } from '@/lib/sslcommerz'
-import { createOrder } from '@/lib/supabase'
 import { randomBytes } from 'crypto'
 
 export async function POST(req: NextRequest) {
   try {
     const { items, totalAmount, shippingAddress } = await req.json()
 
-    // Create order in DB first
+    const { createOrder } = await import('@/lib/supabase')
+    const { initiatePayment } = await import('@/lib/sslcommerz')
+
     const orderId = `SM-${randomBytes(4).toString('hex').toUpperCase()}`
 
     const order = await createOrder({
@@ -26,7 +28,6 @@ export async function POST(req: NextRequest) {
       shipping_address: shippingAddress,
     })
 
-    // Initiate SSLCommerz
     const { url } = await initiatePayment({
       orderId,
       totalAmount: order.total_amount,
