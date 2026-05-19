@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Toaster } from 'react-hot-toast'
-import '../styles/globals.css'
+import '../../styles/globals.css'
 
 export const metadata: Metadata = {
   title: 'SunMall — Too Yummi Chips',
