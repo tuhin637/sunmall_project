@@ -4,6 +4,7 @@ import HeroSection from '@/components/sections/HeroSection'
 import ProductsSection from '@/components/sections/ProductsSection'
 import FeaturesSection from '@/components/sections/FeaturesSection'
 import NewsletterSection from '@/components/sections/NewsletterSection'
+import FlashSaleBanner from '@/components/sections/FlashSaleBanner'
 import Footer from '@/components/layout/Footer'
 
 export default function HomePage() {
@@ -11,6 +12,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-cream">
       <Navbar />
       <CartSidebar />
+      <FlashSaleBanner />
       <HeroSection />
       <FeaturesSection />
       <ProductsSection />

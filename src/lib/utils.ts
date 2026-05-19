@@ -12,3 +12,7 @@ export function formatPrice(price: number): string {
 export function renderStars(rating: number): string {
   return '★'.repeat(rating) + '☆'.repeat(5 - rating)
 }
+
+export function generateId(): string {
+  return `ORD-${Date.now().toString().slice(-6)}`
+}
